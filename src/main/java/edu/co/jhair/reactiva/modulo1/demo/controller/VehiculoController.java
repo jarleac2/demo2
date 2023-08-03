@@ -1,7 +1,6 @@
 package edu.co.jhair.reactiva.modulo1.demo.controller;
 
 import edu.co.jhair.reactiva.modulo1.demo.model.Vehiculo;
-import edu.co.jhair.reactiva.modulo1.demo.repository.VehiculoRepository;
 import edu.co.jhair.reactiva.modulo1.demo.service.VehiculoService;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
@@ -10,8 +9,6 @@ import reactor.core.publisher.Mono;
 @RestController
 @RequestMapping("/vehiculo")
 public class VehiculoController {
-
-    VehiculoRepository vehiculoRepository;
 
     VehiculoService vehiculoService;
 
