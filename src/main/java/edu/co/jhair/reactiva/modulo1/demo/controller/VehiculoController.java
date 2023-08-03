@@ -12,35 +12,39 @@ public class VehiculoController {
 
     VehiculoService vehiculoService;
 
-    public VehiculoController(VehiculoService vehiculoService){
+    public VehiculoController(VehiculoService vehiculoService) {
         this.vehiculoService = vehiculoService;
     }
 
     @GetMapping("/{id}")
-    public Mono<Vehiculo> getVehiculoById(@PathVariable Integer id){
+    public Mono<Vehiculo> getVehiculoById(@PathVariable Integer id) {
         return vehiculoService.findById(id);
     }
 
     @GetMapping("/")
-    public Flux<Vehiculo> getAllVehiculos(){
+    public Flux<Vehiculo> getAllVehiculos() {
         return vehiculoService.findAll();
     }
 
     @GetMapping("/{id}/{marca}")
-    public Flux<Vehiculo> getVehiculosByMarca(@PathVariable String marca){
+    public Flux<Vehiculo> getVehiculosByMarca(@PathVariable String marca) {
         return vehiculoService.findByMarca(marca);
     }
 
     @GetMapping("/{id}/{placa}")
-    public Flux<Vehiculo> getVehiculosByPlaca(@PathVariable String placa){
+    public Flux<Vehiculo> getVehiculosByPlaca(@PathVariable String placa) {
         return vehiculoService.findByPlaca(placa);
     }
 
     @PostMapping("/")
-    public Mono<Vehiculo> createVehiculo(@RequestBody Vehiculo vehiculo){
+    public Mono<Vehiculo> createVehiculo(@RequestBody Vehiculo vehiculo) {
         return vehiculoService.save(vehiculo);
     }
 
+    @PutMapping("/")
+    public Mono<Vehiculo> updateVehiculo(@PathVariable Integer id, @RequestBody Vehiculo vehiculo){
+        return vehiculoService.update(id, vehiculo);
+    }
     @DeleteMapping("/{id}")
     public Mono<Vehiculo> deleteVehiculoById(@PathVariable Integer id){
         return vehiculoService.deleteById(id);

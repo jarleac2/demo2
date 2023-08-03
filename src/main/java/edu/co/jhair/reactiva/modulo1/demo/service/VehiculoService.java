@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Optional;
+
 
 @Service
 public class VehiculoService {
@@ -39,6 +41,20 @@ public class VehiculoService {
 
     public Mono<Void> deleteAll(){
         return vehiculoRepository.deleteAll();
+    }
+
+    public Mono<Vehiculo> update(int id, Vehiculo vehiculo){
+        return vehiculoRepository.findById(id).map(Optional::of).defaultIfEmpty(Optional.empty()).flatMap(optionalVehiculo -> {
+            if(optionalVehiculo.isPresent()){
+                vehiculo.setId(id);
+                vehiculo.setMarca(optionalVehiculo.get().getMarca());
+                vehiculo.setModelo(optionalVehiculo.get().getModelo());
+                vehiculo.setPlaca(optionalVehiculo.get().getPlaca());
+                vehiculo.setLinea(optionalVehiculo.get().getLinea());
+                return vehiculoRepository.save(vehiculo);
+            }
+            return Mono.empty();
+        });
     }
 
 }

@@ -84,6 +84,25 @@ public class VehiculoControllerTest {
     }
 
     @Test
+    void testUpdateVehiculoExitoso() {
+        Vehiculo vehiculoActualizado = new Vehiculo(1, 1, "Renault", "XVX123", "2014", "SANDERO");
+        when(vehiculoService.update(any(Integer.class), any(Vehiculo.class))).thenReturn(Mono.just(vehiculoActualizado));
+        Mono<Vehiculo> result = vehiculoController.updateVehiculo(vehiculoActualizado.getId(), vehiculoActualizado);
+        StepVerifier.create(result)
+                .expectNext(vehiculoActualizado)
+                .verifyComplete();
+    }
+
+    @Test
+    public void testUpdateClienteFallido() {
+        Vehiculo vehiculoActualizado = new Vehiculo(1, 1, "Renault", "XVX123", "2014", "SANDERO");
+        when(vehiculoService.update(any(Integer.class), any(Vehiculo.class))).thenReturn(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "Vehiculo no actualizado")));
+        StepVerifier.create(vehiculoController.updateVehiculo(vehiculoActualizado.getId(), vehiculoActualizado))
+                .expectError(ResponseStatusException.class)
+                .verify();
+    }
+
+    @Test
     void testDeleteVehiculoByIdExitoso() throws Exception {
         int id = 1;
         Vehiculo vehiculoXBorrar = new Vehiculo(id, 1, "Renault", "XVX123", "2014", "SANDERO");
