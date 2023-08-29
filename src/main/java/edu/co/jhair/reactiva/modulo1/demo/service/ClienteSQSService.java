@@ -33,6 +33,10 @@ public class ClienteSQSService {
                 new MessageAttributeValue()
                         .withStringValue(Optional.ofNullable(cliente.getId()).orElse(-301).toString())
                         .withDataType("Number"));
+        atributosMensaje.put("idTipoDocumento",
+                new MessageAttributeValue()
+                        .withStringValue(Optional.ofNullable(cliente.getId()).orElse(-301).toString())
+                        .withDataType("Number"));
         atributosMensaje.put("numeroIdentificacion",
                 new MessageAttributeValue()
                         .withStringValue(cliente.getNumeroIdentificacion())
