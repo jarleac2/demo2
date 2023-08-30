@@ -98,4 +98,12 @@ public class ClienteController {
                 (String) requestBody.get("nombreCliente"));
     }
 
+    @GetMapping("/aws/getMessagesByNombre")
+    public Flux<Cliente> getMessagesByNombre(@RequestBody Map<String, Object> requestBody){
+        return clienteSQSService.getClienteMessage((String) requestBody.get("queueName"),
+                (Integer) requestBody.get("maxNumberMessages"),
+                (Integer) requestBody.get("waitTimeSeconds"),
+                (String) requestBody.get("nombreCliente"));
+    }
+
 }

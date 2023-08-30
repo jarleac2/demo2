@@ -1,9 +1,11 @@
 package edu.co.jhair.reactiva.modulo1.demo.service;
 
+import com.amazonaws.services.arczonalshift.model.ListZonalShiftsRequest;
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.model.*;
 import edu.co.jhair.reactiva.modulo1.demo.model.Cliente;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.*;
@@ -96,7 +98,7 @@ public class ClienteSQSService {
                             message.getMessageAttributes().get("numeroIdentificacion").getStringValue(),
                             message.getMessageAttributes().get("nombre").getStringValue(),
                             message.getMessageAttributes().get("apellido").getStringValue(),
-                            message.getMessageAttributes().get("celular").getStringValue(),
+                            message.getMessageAttributes().get("telefono").getStringValue(),
                             message.getMessageAttributes().get("correo").getStringValue(),
                             Boolean.getBoolean(message.getMessageAttributes().get("activo").getStringValue()));
                     clienteSQS.deleteMessage(this.getQueueUrl(queueName), message.getReceiptHandle());
@@ -105,5 +107,28 @@ public class ClienteSQSService {
             }
         }
         return Mono.empty();
+    }
+
+    public Flux<Cliente> getClienteMessage(String queueName, Integer maxNumberMessages,
+                                           Integer waitTimeSeconds, String nombreCliente){
+        List<Message> clienteMessages = receiveMessagesFromQueue(queueName, maxNumberMessages, waitTimeSeconds);
+        List<Cliente> listaClientes = new ArrayList<Cliente>();
+        for(Message message : clienteMessages){
+            if(!message.getMessageAttributes().isEmpty()) {
+                if (message.getMessageAttributes().get("nombre").getStringValue().equals(nombreCliente)) {
+                    Cliente cliente = new Cliente(Integer.valueOf(message.getMessageAttributes().get("id").getStringValue()),
+                            Integer.valueOf(message.getMessageAttributes().get("idTipoDocumento").getStringValue()),
+                            message.getMessageAttributes().get("numeroIdentificacion").getStringValue(),
+                            message.getMessageAttributes().get("nombre").getStringValue(),
+                            message.getMessageAttributes().get("apellido").getStringValue(),
+                            message.getMessageAttributes().get("telefono").getStringValue(),
+                            message.getMessageAttributes().get("correo").getStringValue(),
+                            Boolean.getBoolean(message.getMessageAttributes().get("activo").getStringValue()));
+
+                    listaClientes.add(cliente);
+                }
+            }
+        }
+        return Flux.fromIterable(listaClientes);
     }
 }
