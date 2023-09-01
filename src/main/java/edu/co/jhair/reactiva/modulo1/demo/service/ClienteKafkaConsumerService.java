@@ -26,7 +26,6 @@ public class ClienteKafkaConsumerService {
         kafkaTemplate.setConsumerFactory(kafkaConfig.consumerFactory());
         ultimoCliente = kafkaTemplate.receive(topico, 0, 0);
         String clienteRecibido = Objects.requireNonNull(ultimoCliente.value());
-        //LOGGER.info("Descripcion del ultimo cliente encontrado " + Objects.requireNonNull(clienteRecibido).getDescripcion());
         return clienteRecibido;
     }
 }
